@@ -1,3 +1,4 @@
 *.pp
+*.pp.bz2
 *_selinux.8
 /tmp

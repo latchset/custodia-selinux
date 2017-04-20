@@ -50,6 +50,8 @@ sepolicy manpage -p . -d custodia_t
 /sbin/restorecon -F -R -v /usr/lib/systemd/system/custodia.socket
 # Fixing the file context on /usr/lib/systemd/system/custodia.service
 /sbin/restorecon -F -R -v /usr/lib/systemd/system/custodia.service
+# Fixing the file context on /etc/custodia
+/sbin/restorecon -F -R -v /etc/custodia
 # Fixing the file context on /var/log/custodia
 /sbin/restorecon -F -R -v /var/log/custodia
 # Fixing the file context on /var/run/custodia

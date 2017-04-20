@@ -1,0 +1,3 @@
+*.pp
+*_selinux.8
+/tmp

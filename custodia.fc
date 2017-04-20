@@ -4,6 +4,10 @@
 
 /usr/sbin/custodia		--	gen_context(system_u:object_r:custodia_exec_t,s0)
 
+/etc/custodia/custodia.keytab		gen_context(system_u:object_r:custodia_keytab_t,s0)
+
+/etc/custodia(/.*)?			gen_context(system_u:object_r:custodia_etc_t,s0)
+
 /var/lib/custodia(/.*)?		gen_context(system_u:object_r:custodia_var_lib_t,s0)
 
 /var/log/custodia(/.*)?		gen_context(system_u:object_r:custodia_log_t,s0)

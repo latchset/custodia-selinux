@@ -14,6 +14,12 @@ permissive custodia_t;
 type custodia_log_t;
 logging_log_file(custodia_log_t)
 
+type custodia_etc_t;
+files_type(custodia_etc_t)
+
+type custodia_keytab_t;
+files_type(custodia_keytab_t)
+
 type custodia_var_lib_t;
 files_type(custodia_var_lib_t)
 
@@ -29,6 +35,16 @@ systemd_unit_file(custodia_unit_file_t)
 #
 allow custodia_t self:fifo_file rw_fifo_file_perms;
 allow custodia_t self:unix_stream_socket create_stream_socket_perms;
+allow custodia_t self:capability net_admin;
+allow custodia_t self:unix_dgram_socket { create getopt setopt };
+allow custodia_t self:tcp_socket { accept connect create getattr getopt setopt shutdown };
+allow custodia_t self:udp_socket { connect create getattr };
+
+allow custodia_t self:process execmem;
+
+allow custodia_t custodia_etc_t:file { getattr ioctl open read };
+
+allow custodia_t custodia_keytab_t:file { getattr ioctl open read };
 
 manage_dirs_pattern(custodia_t, custodia_log_t, custodia_log_t)
 manage_files_pattern(custodia_t, custodia_log_t, custodia_log_t)
@@ -45,8 +61,35 @@ manage_files_pattern(custodia_t, custodia_var_run_t, custodia_var_run_t)
 manage_lnk_files_pattern(custodia_t, custodia_var_run_t, custodia_var_run_t)
 files_pid_filetrans(custodia_t, custodia_var_run_t, { dir file lnk_file })
 
-domain_use_interactive_fds(custodia_t)
+kernel_read_network_state(custodia_t)
+kernel_read_system_state(custodia_t)
+kernel_dgram_send(custodia_t)
+
+auth_read_passwd(custodia_t)
+
+corecmd_exec_bin(custodia_t)
+
+corenet_tcp_bind_generic_node(custodia_t)
+
+dev_list_sysfs(custodia_t)
+dev_read_rand(custodia_t)
+
+miscfiles_read_generic_certs(custodia_t)
+
+sysnet_read_config(custodia_t)
 
 files_read_etc_files(custodia_t)
 
-miscfiles_read_localization(custodia_t)
+require {
+	type custodia_t;
+	class capability net_admin;
+	class unix_dgram_socket { create getopt setopt };
+	class tcp_socket { accept connect create name_bind name_connect setopt shutdown };
+	class udp_socket { connect create getattr };
+}
+
+require {
+	type custodia_t;
+	type custodia_etc_t;
+	class file { getattr ioctl open read };
+}
